@@ -2,12 +2,15 @@
 NAME = myshell
 CC = gcc
 FLAGS = -Wall -Wextra -Werror
-LINKING = -lreadline -L${HOME}/.brew/opt/readline/lib
-COMFILE = -I${HOME}/.brew/opt/readline/include
 SDIR = srcs/
 LIB = libft
+LREAD = /usr/local/Cellar/readline/8.2.1
 INC = include
-RDIR = /usr/include
+INC_ALL = 	-I$(INC) \
+			-I$(LIB) \
+			-I$(LREAD)/include 
+LINK = 	-lreadline -L$(LREAD)/lib \
+		-lft -L$(LIB) \
 
 #color
 DEFCO = '\033[0m'
@@ -23,20 +26,26 @@ SRC_NAME = 	myshell_main.c \
 			lexer.c \
 			parser.c \
 			executor.c \
+			exe_single.c \
+			exe_signal.c \
+			exe_pipex.c \
+			init.c \
 
 OBJS = $(addprefix $(SDIR), $(SRC_NAME:.c=.o))
 
 all : $(NAME)
 
+$(SDIR)%.o : $(SDIR)%.c
+	@ $(CC) $(FLAGS) $(INC_ALL) -c $< -o $@ 
+
 $(NAME) : $(OBJS)
 	@ echo "$(YELLOW)Make libft.a library$(DEFCO)"
-	@ make bonus -C $(LIB)
+	@ make -C $(LIB)
 	@ echo "$(GREEN)libft.a created$(DEFCO)"
-	@ $(CC) $(FLAGS) $^ -L $(LIB) -lft -I $(INC) -I $(LIB) -lreadline -o $(NAME)
+	@ $(CC) $(FLAGS) $(OBJS) $(LINK) -o $(NAME)
 	@ echo "$(GREEN)$(NAME) created$(DEFCO)" 
 
-$(SDIR)%.o : $(SDIR)%.c
-	@ $(CC) $(FLAGS) -c $< -o $@ -I $(INC) -I $(LIB)
+
 
 clean:
 	@ make clean -C $(LIB)
