@@ -51,47 +51,45 @@ char	*sub_string(char *str, int left, int right)
 	return (sub_str);
 }
 
-void	add_cmd(t_data *data, char *substr, int n)
+void	add_cmd(t_data *data, int n)
 {
+	char	*substr;
+
+	substr = NULL;
 	if (n == 0)
-		substr = sub_string(data->cmd_str, data->s_left, data->s_right - 1);
+		substr = sub_string(data->cmd_str, data->l, data->r - 1);
 	else
-		substr = sub_string(data->cmd_str, data->s_left, data->s_right);
+		substr = sub_string(data->cmd_str, data->l, data->r);
 	ft_lstadd_back(&data->cmd_ll, ft_lstnew(newtoken(substr)));
 	if (n == 1)
-		data->s_right++;
-	data->s_left = data->s_right;
+		data->r++;
+	data->l = data->r;
 	free(substr);
 }
 
 void	lexer(t_data *data)
 {
 	int		quote;
-	char	*substr;
 
-	substr = NULL;
-	data->s_len = strlen(data->cmd_str);
-	while (data->s_right < data->s_len && data->s_left <= data->s_right)
+	data->i = strlen(data->cmd_str);
+	while (data->r < data->i && data->l <= data->r)
 	{
-		if (isspace(data->cmd_str[data->s_right]))
+		if (isspace(data->cmd_str[data->r]))
+			data->l = data->r++;
+		else if (is_quote(data->cmd_str[data->r]) == true)
 		{
-			data->s_right++;
-			data->s_left = data->s_right;
-		}
-		else if (is_quote(data->cmd_str[data->s_right]) == true)
-		{
-			quote = data->cmd_str[data->s_right];
-			data->s_right++;
-			while (data->cmd_str[data->s_right] != quote && data->s_right < data->s_len)
-				data->s_right++;
-			add_cmd(data, substr, 1);
+			quote = data->cmd_str[data->r];
+			data->r++;
+			while (data->cmd_str[data->r] != quote && data->r < data->l)
+				data->r++;
+			add_cmd(data, 1);
 		}
 		else
 		{
-			data->s_right++;
-			while (isspace(data->cmd_str[data->s_right]) == 0 && data->s_right < data->s_len)
-				data->s_right++;
-			add_cmd(data, substr, 0);
+			data->r++;
+			while (isspace(data->cmd_str[data->r]) == 0 && data->r < data->i)
+				data->r++;
+			add_cmd(data, 0);
 		}
 	}
 }

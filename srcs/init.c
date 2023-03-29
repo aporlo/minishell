@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+
 void	sighandler(int signal)
 {
 	if (signal == SIGINT)
@@ -26,8 +27,8 @@ void	init(t_data *data)
 {
 	data->cmd_str = NULL;
 	data->cmd_ll = NULL;
-	data->s_left = 0;
-	data->s_right = 0;
+	data->l = 0;
+	data->r = 0;
 	data->my_env.env_path = ft_split(getenv("PATH"), ':');
 	data->my_env.dis_str = ft_strjoin(getenv("USER"), "@Myshell: ");
 	data->my_env.act.sa_handler = sighandler;
