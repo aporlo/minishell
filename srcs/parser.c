@@ -45,7 +45,7 @@ t_cmd_node  *newnode(t_list *temp)
 void    node_addback(t_cmd_node **node, t_cmd_node *new)
 {
     t_cmd_node  *tmp_nd;
-    
+
     if (!new)
         return ;
     if (*node == NULL)
@@ -69,8 +69,14 @@ int     isredirection(t_list *ptr)
 
 void    redirection_parse(t_list *ptr, t_cmd_table *cmd_table)
 {
+    printf("p_token is %s\n", ptr->token);
     if (ft_strncmp(ptr->token, "LESS", 5) == 0)
+    {
+        printf("in_file is %s\n", ptr->next->token);
         cmd_table->infile = ft_strdup(ptr->next->token);
+
+    }
+
     if (ft_strncmp(ptr->token, "GREAT", 6) == 0)
         cmd_table->outfile = ft_strjoin("> :", ptr->next->token);
     if (ft_strncmp(ptr->token, "GREATGREAT", 11) == 0)
@@ -85,7 +91,7 @@ t_cmd_table    *parser(t_list *cmd_ll)
     t_list          *left_ptr;
     t_list          *right_ptr;
     t_list          *temp;
-    
+
     cmd_table = malloc(sizeof(t_cmd_table));
     if (!cmd_table)
         return (NULL);

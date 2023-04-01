@@ -77,8 +77,10 @@ typedef struct s_data
 	int				i;
 	int				r;
 	int				l;
+	int				quote;
 	t_list			*cmd_ll;
 	t_system		my_env;
+	t_executor		*exe;
 }	t_data;
 
 void		lexer(t_data *data);

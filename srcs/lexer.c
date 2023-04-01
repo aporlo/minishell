@@ -69,18 +69,19 @@ void	add_cmd(t_data *data, int n)
 
 void	lexer(t_data *data)
 {
-	int		quote;
-
 	data->i = strlen(data->cmd_str);
 	while (data->r < data->i && data->l <= data->r)
 	{
 		if (isspace(data->cmd_str[data->r]))
-			data->l = data->r++;
+		{
+			data->r++;
+			data->l++;
+		}
 		else if (is_quote(data->cmd_str[data->r]) == true)
 		{
-			quote = data->cmd_str[data->r];
+			data->quote = data->cmd_str[data->r];
 			data->r++;
-			while (data->cmd_str[data->r] != quote && data->r < data->l)
+			while (data->cmd_str[data->r] != data->quote && data->r < data->l)
 				data->r++;
 			add_cmd(data, 1);
 		}
