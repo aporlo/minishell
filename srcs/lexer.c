@@ -12,21 +12,21 @@
 
 #include "minishell.h"
 
-static char	*newtoken(char *str)
-{
-	if (ft_strncmp(str, ">", 2) == 0)
-		return (ft_strdup("GREAT"));
-	else if (ft_strncmp(str, "<", 2) == 0)
-		return (ft_strdup("LESS"));
-	else if (ft_strncmp(str, ">>", 3) == 0)
-		return (ft_strdup("GREATGREAT"));
-	else if (ft_strncmp(str, "<<", 3) == 0)
-		return (ft_strdup("LESSLESS"));
-	else if (ft_strncmp(str, "|", 2) == 0)
-		return (ft_strdup("PIPE"));
-	else
-		return (ft_strdup(str));
-}
+// static char	*newtoken(char *str)
+// {
+// 	if (ft_strncmp(str, ">", 2) == 0)
+// 		return (ft_strdup("GREAT"));
+// 	else if (ft_strncmp(str, "<", 2) == 0)
+// 		return (ft_strdup("LESS"));
+// 	else if (ft_strncmp(str, ">>", 3) == 0)
+// 		return (ft_strdup("GREATGREAT"));
+// 	else if (ft_strncmp(str, "<<", 3) == 0)
+// 		return (ft_strdup("LESSLESS"));
+// 	else if (ft_strncmp(str, "|", 2) == 0)
+// 		return (ft_strdup("PIPE"));
+// 	else
+// 		return (ft_strdup(str));
+// }
 
 bool	is_quote(char ch)
 {
@@ -57,10 +57,10 @@ void	add_cmd(t_data *data, int n)
 
 	substr = NULL;
 	if (n == 0)
-		substr = sub_string(data->cmd_str, data->l, data->r - 1);
+		substr = ft_substr(data->cmd_str, data->l, (data->r - data->l));
 	else
-		substr = sub_string(data->cmd_str, data->l, data->r);
-	ft_lstadd_back(&data->cmd_ll, ft_lstnew(newtoken(substr)));
+		substr = ft_substr(data->cmd_str, data->l, (data->r - data->l + 1));
+	ft_lstadd_back(&data->cmd_ll, ft_lstnew(ft_strdup(substr)));
 	if (n == 1)
 		data->r++;
 	data->l = data->r;

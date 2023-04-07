@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strtrim.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: pingpanu <pingpanu@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 22:39:36 by pingpanu          #+#    #+#             */
-/*   Updated: 2022/03/01 12:47:18 by pingpanu         ###   ########.fr       */
+/*   Updated: 2023/03/22 14:20:19 by pingpanu         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,4 +55,4 @@ char	*ft_strtrim(const char *s1, const char *set)
 		*ptr++ = s1[start++];
 	*ptr = '\0';
 	return (ret);
-}	
+}

@@ -39,9 +39,11 @@ typedef struct s_system
 {
 	struct sigaction	act;
 	struct sigaction	quit;
-	char				**env_path;
-	char				*dis_str;
 	struct termios		*sh_terminal;
+	struct termios		*myshell_term;
+	char				**env_cop;
+	char				**env_path;
+	char				*dis_str[500];
 }		t_system;
 
 typedef struct s_cmd_node
@@ -83,14 +85,31 @@ typedef struct s_data
 	t_executor		*exe;
 }	t_data;
 
+void		sighandler(int signal);
+void		exit_shell(t_system *env, t_cmd_table *cmdt, t_list *cmdll, int s);
+char		*curr_dir(void);
 void		lexer(t_data *data);
+void		free_token(void *content);
+void		free_arr(char **arr);
+void		free_cmdtable(t_cmd_table *cmdt);
+
 t_cmd_table	*parser(t_list *cmd_ll);
-int			executor(t_system my_env, t_cmd_table *cmd_table);
+void		expander(t_cmd_table *cmdt);
+
+int			executor(t_system *my_env, t_cmd_table *cmd_table, t_list *cmdll);
 char		*find_path(char *cmd, char **env_path);
 void		signal_operator(t_system *my_env, int status);
-int			single_executor(t_system env, t_cmd_table *cmdt, t_executor *exe);
-int			pipe_executor(t_system env, t_cmd_table *cmdt, t_executor *exe);
-void		buildins(t_system env, t_cmd_node *node, t_executor *exe);
-void		sighandler(int signal);
-void		init(t_data *data);
+int			single_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe);
+int			pipe_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe);
+void		init(t_data *data, char **ev);
+void		init_terminal(t_system *env);
+void		node_clear(t_cmd_node **node);
+int			is_buildins(char *cmd);
+int			buildins(t_system *env, t_cmd_table *cmdt, t_executor *exe, t_list *cmdll);
+int			exe_cd(t_system *env, char *path);
+int			exe_echo(t_executor *exe, t_cmd_node *node);
+int			exe_env(t_system *env, t_cmd_node *node);
+int			exe_pwd(t_cmd_node *node);
+int			exe_unset(t_cmd_node *node, t_system *env);
+int			exe_export(t_cmd_node *node, t_system *env);
 #endif

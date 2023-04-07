@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   ft_strrchr.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: pingpanu <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: user <user@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/28 22:24:35 by pingpanu          #+#    #+#             */
-/*   Updated: 2022/03/06 12:00:16 by pingpanu         ###   ########.fr       */
+/*   Updated: 2023/04/03 14:58:40 by user             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
-char	*ft_strrchr(const char *s, int c)
+char	*ft_strrchr(const char *s, int c, int skip)
 {
 	unsigned char	cuc;
 	size_t			i;
@@ -25,5 +25,8 @@ char	*ft_strrchr(const char *s, int c)
 			return (NULL);
 		i--;
 	}
-	return ((char *)s + i);
+	if (skip == 0)
+		return ((char *)s + i);
+	else
+		return ((char *)s + i + 1);
 }

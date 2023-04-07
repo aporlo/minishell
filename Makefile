@@ -8,7 +8,7 @@ LREAD = /usr/local/Cellar/readline/8.2.1
 INC = include
 INC_ALL = 	-I$(INC) \
 			-I$(LIB) \
-			-I$(LREAD)/include 
+			-I$(LREAD)/include
 LINK = 	-lreadline -L$(LREAD)/lib \
 		-lft -L$(LIB) \
 
@@ -25,32 +25,42 @@ CYAN = '\033[0;36m'
 SRC_NAME = 	myshell_main.c \
 			lexer.c \
 			parser.c \
+			expander.c \
 			executor.c \
 			exe_single.c \
 			exe_signal.c \
 			exe_pipex.c \
+			buildins.c \
 			init.c \
+			free_data.c \
+			buildin/exe_cd.c \
+			buildin/exe_echo.c \
+			buildin/exe_env.c \
+			buildin/exe_export.c \
+			buildin/exe_pwd.c \
+			buildin/exe_unset.c \
+
 
 OBJS = $(addprefix $(SDIR), $(SRC_NAME:.c=.o))
 
 all : $(NAME)
 
 $(SDIR)%.o : $(SDIR)%.c
-	@ $(CC) $(FLAGS) $(INC_ALL) -c $< -o $@ 
+	@ $(CC) $(FLAGS) $(INC_ALL) -c $< -o $@
 
 $(NAME) : $(OBJS)
 	@ echo "$(YELLOW)Make libft.a library$(DEFCO)"
 	@ make -C $(LIB)
 	@ echo "$(GREEN)libft.a created$(DEFCO)"
 	@ $(CC) $(FLAGS) $(OBJS) $(LINK) -o $(NAME)
-	@ echo "$(GREEN)$(NAME) created$(DEFCO)" 
+	@ echo "$(GREEN)$(NAME) created$(DEFCO)"
 
 
 
 clean:
 	@ make clean -C $(LIB)
 	@ echo "$(YELLOW)libft.a removed$(DEFCO)"
-	@ rm $(SDIR)*.o 
+	@ rm $(SDIR)*.o
 	@ echo "$(GREEN)Object files removed$(DEFCO)"
 
 fclean: clean
