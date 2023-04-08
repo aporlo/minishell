@@ -23,8 +23,6 @@ SRC = ft_isalnum.c ft_isalpha.c ft_isdigit.c ft_isascii.c ft_isprint.c ft_touppe
 
 OBJ = $(SRC:.c=.o)
 
-OBJ_BONUS = $(BONUS:.c=.o)
-
 all: $(NAME)
 
 $(NAME) : $(OBJ)
@@ -34,11 +32,6 @@ $(NAME) : $(OBJ)
 
 %.o : %.c
 	@ gcc -c $(FLAGS) $^ -I ./
-
-bonus : $(OBJ) $(OBJ_BONUS)
-	@ echo "compile library libft.a with bonus"
-	@ ar rc $(NAME) $^ $^
-	@ echo "done"
 
 .PHONY : all bonus clean fclean re rebonus
 

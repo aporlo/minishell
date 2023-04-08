@@ -50,13 +50,8 @@ static char	**copy_env(char **ev)
 
 void	init(t_data *data, char **ev)
 {
-	// t_system	env;
-
-	// env = data->my_env;
 	data->cmd_str = NULL;
 	data->cmd_ll = NULL;
-	data->l = 0;
-	data->r = 0;
 	data->my_env.env_cop = copy_env(ev);
 	data->my_env.env_path = ft_split(getenv("PATH"), ':');
 	ft_strlcat((char *)data->my_env.dis_str, "Myshell@ ", 10);
@@ -74,4 +69,11 @@ void	init_terminal(t_system *env)
 	env->myshell_term = malloc(sizeof(struct termios));
 	tcgetattr(STDIN_FILENO, env->myshell_term);
 	tcsetattr(STDIN_FILENO, TCSAFLUSH, env->myshell_term);
+}
+
+void	init_stpar(t_stpar *stpar)
+{
+	stpar->len = 0;
+	stpar->l = 0;
+	stpar->r = 0;
 }

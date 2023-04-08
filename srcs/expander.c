@@ -1,67 +1,106 @@
 #include "minishell.h"
 
-static char *rem_str(char *str)
+static int      get_numdoll(char *str)
 {
-    char    *ret;
-    int     i = 0;
-    int     j = 0;
-    int     len = ft_strlen(str) - 2;
+    int     i;
 
-    ret = ft_calloc(sizeof(char), len);
-    while (str[++i] && j < len)
+    i = 0;
+    while(*str)
     {
-        ret[j] = str[i];
-        j++;
+        if (*str == '$')
+            i++;
+        str++;
+    }
+    return (i);
+}
+
+static char     *ll_to_string(t_list *buf)
+{
+    t_list  *ptr;
+    char    *buenv;
+    char    *ret;
+
+    ptr = buf;
+    ret = NULL;
+    while (ptr)
+    {
+        buenv = (char*)ptr->token;
+        if (buenv[0] == '$')
+            buenv = getenv(buenv + 1);
+        if (!ret)
+            ret = ft_strdup(buenv);
+        else
+            ret = ft_strjoin(ret, buenv);
+        ptr = ptr->next;
     }
     return (ret);
 }
 
-static void quote_remove(char **cmd_arr)
+static char     *expand_dollar(char *cast)
 {
+    int     left = 0, right = 0;
+    int     len = ft_strlen(cast);
+    t_list  *buf = NULL;
+    char    *substr;
+
+    while (right <= len && left <= right)
+    {
+        if (right == 0 && cast[right] == '$')
+            right++;
+        if (cast[right] == 32)
+        {
+            right++;
+            left++;
+        }
+        if ((right != 0 && cast[right] == '$') || (cast[left] == '$' && right == len))
+        {
+            substr = ft_substr(cast, left, (right - left));
+            ft_lstadd_back(&buf, ft_lstnew(substr));
+            left = right;
+        }
+        right++;
+    }
+    cast = ll_to_string(buf);
+    ft_lstclear(&buf, &free_token);
+    return (cast);
+}
+
+static char     *quote_remove(void *content)
+{
+    char    *casted;
+    char    *ret;
     int     i = 0;
 
-    while (cmd_arr[i])
+    casted = (char*)content;
+    ret = ft_calloc(sizeof(char), ft_strlen(casted) - 1);
+    while (i < (int)ft_strlen(casted) - 2)
     {
-        if (cmd_arr[i][0] == 39 || cmd_arr[i][0] == 34)
-            cmd_arr[i] = rem_str(cmd_arr[i]);
+        ret[i] = casted[i + 1];
         i++;
     }
+    return (ret);
 }
-/*
-static void add_sign(char **cmd_arr)
+
+void    expander(t_list **cmd_ll)
 {
-    int     i = 0;
-    char    *path;
-    char    *buf;
+    t_list  *ptr;
+    char    *casted;
 
-    while (cmd_arr[++i])
-    {
-        if (cmd_arr[i][0] == '$')
-        {
-            path =
-        }
-    }
-}*/
-
-void    expander(t_cmd_table *cmdt)
-{
-    t_cmd_node  *ptr;
-
-    if (!cmdt->cmds)
+    if (!(*cmd_ll))
         return ;
-    ptr = cmdt->cmds;
+    ptr = *cmd_ll;
     while (ptr)
     {
-        quote_remove(ptr->cmd_arr);
-        /*if (ptr->cmd_arr[0] == 39)
-            quote_remove(ptr->cmd_arr);
-        else if (ptr->cmd_arr[0] == 34)
+        casted = (char*)ptr->token;
+        if (casted[0] == 39)
+            ptr->token = (void*)quote_remove(ptr->token);
+        if (casted[0] == 34 && get_numdoll(casted) > 0)
         {
-            quote_remove(ptr->cmd_arr);
-            add_sign(ptr->cmd_arr);
+            casted = quote_remove(casted);
+            ptr->token = (void*)expand_dollar(casted);
         }
-        else
-            add_sign(ptr->cmd_arr);*/
+        if (get_numdoll(casted) > 0)
+            ptr->token = (void*)expand_dollar(casted);
         ptr = ptr->next;
     }
 }

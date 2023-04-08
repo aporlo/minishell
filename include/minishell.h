@@ -29,7 +29,7 @@
 # include <signal.h> //signal, sigaction, sigemptyset, sigaddset, and kill
 # include <dirent.h> //opendir, readdir, and closedir
 # include <errno.h> //stderror, and perror
-# include <termio.h>
+# include <term.h>
 # include <termios.h> //tc*
 # define BASH_IN 0
 # define BASH_OPT 1
@@ -39,7 +39,6 @@ typedef struct s_system
 {
 	struct sigaction	act;
 	struct sigaction	quit;
-	struct termios		*sh_terminal;
 	struct termios		*myshell_term;
 	char				**env_cop;
 	char				**env_path;
@@ -76,25 +75,33 @@ typedef struct s_data
 {
 	t_cmd_table		*cmd_table;
 	char			*cmd_str;
-	int				i;
-	int				r;
-	int				l;
-	int				quote;
 	t_list			*cmd_ll;
 	t_system		my_env;
 	t_executor		*exe;
 }	t_data;
 
+typedef struct s_stpar
+{
+	int	len;
+	int	l;
+	int	r;
+	int	quote;
+}	t_stpar;
+
 void		sighandler(int signal);
 void		exit_shell(t_system *env, t_cmd_table *cmdt, t_list *cmdll, int s);
 char		*curr_dir(void);
-void		lexer(t_data *data);
+void		lexer(t_data *data, t_stpar stpar);
 void		free_token(void *content);
 void		free_arr(char **arr);
 void		free_cmdtable(t_cmd_table *cmdt);
 
 t_cmd_table	*parser(t_list *cmd_ll);
-void		expander(t_cmd_table *cmdt);
+char		**ll_to_strarr(t_list *cmd_ll);
+t_list		*sub_linklist(t_list *left, t_list *right);
+int			isredirection(t_list *ptr);
+void		redirection_parse(t_list *ptr, t_cmd_table *cmd_table);
+void		expander(t_list **cmd_ll);
 
 int			executor(t_system *my_env, t_cmd_table *cmd_table, t_list *cmdll);
 char		*find_path(char *cmd, char **env_path);
@@ -103,6 +110,7 @@ int			single_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe);
 int			pipe_executor(t_system *env, t_cmd_table *cmdt, t_executor *exe);
 void		init(t_data *data, char **ev);
 void		init_terminal(t_system *env);
+void		init_stpar(t_stpar *stpar);
 void		node_clear(t_cmd_node **node);
 int			is_buildins(char *cmd);
 int			buildins(t_system *env, t_cmd_table *cmdt, t_executor *exe, t_list *cmdll);

@@ -15,7 +15,6 @@ int buildins(t_system *env, t_cmd_table *cmdt, t_executor *exe, t_list *cmdll)
     t_cmd_node  *node;
 
     node = cmdt->cmds;
-    printf("aporlo\n");
     signal_operator(env, BASH_IN);
     if (!ft_strncmp(node->cmd_arr[0], "echo", 5))
         return (exe_echo(exe, node));

@@ -17,7 +17,7 @@ char    *find_path(char *cmd, char **env_path)
     }
     if (access(cmd, F_OK) == 0)
          return (cmd);
-    printf("%s: No such file or directory\n", cmd);
+    printf("aporlo%s: No such file or directory\n", cmd);
     return (NULL);
 }
 

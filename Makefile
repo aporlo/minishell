@@ -4,13 +4,12 @@ CC = gcc
 FLAGS = -Wall -Wextra -Werror
 SDIR = srcs/
 LIB = libft
-LREAD = /usr/local/Cellar/readline/8.2.1
+LRB = /usr/local/Cellar/readline/8.2.1
 INC = include
 INC_ALL = 	-I$(INC) \
 			-I$(LIB) \
-			-I$(LREAD)/include
-LINK = 	-lreadline -L$(LREAD)/lib \
-		-lft -L$(LIB) \
+			-I$(LRB)/include
+LINK = 	-L$(LRB)/lib -lreadline -L$(LIB) -lft\
 
 #color
 DEFCO = '\033[0m'
@@ -39,6 +38,7 @@ SRC_NAME = 	myshell_main.c \
 			buildin/exe_export.c \
 			buildin/exe_pwd.c \
 			buildin/exe_unset.c \
+			parser_utils.c \
 
 
 OBJS = $(addprefix $(SDIR), $(SRC_NAME:.c=.o))
@@ -60,6 +60,7 @@ $(NAME) : $(OBJS)
 clean:
 	@ make clean -C $(LIB)
 	@ echo "$(YELLOW)libft.a removed$(DEFCO)"
+	@ rm $(SDIR)buildin/*.o
 	@ rm $(SDIR)*.o
 	@ echo "$(GREEN)Object files removed$(DEFCO)"
 
